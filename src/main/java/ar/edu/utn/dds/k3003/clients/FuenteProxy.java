@@ -26,7 +26,7 @@ public class FuenteProxy implements FachadaProcesadorPdI {
     public FuenteProxy(ObjectMapper objectMapper) {
 
         var env = System.getenv();
-        this.endpoint = env.getOrDefault("URL_VIANDAS", "http://localhost:8081/"); //change this later.
+        this.endpoint = env.getOrDefault("URL_PDI", "HTTP://localhost:8080/api/PdIs"); //change for direction.
 
         var retrofit =
                 new Retrofit.Builder()
