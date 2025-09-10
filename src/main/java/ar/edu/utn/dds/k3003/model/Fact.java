@@ -43,7 +43,8 @@ public class Fact
 
         ACTIVO,
         BORRADO,
-        INACTIVO
+        INACTIVO,
+        CENSURADO
     }
 
     // New Fact
