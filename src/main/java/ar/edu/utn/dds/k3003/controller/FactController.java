@@ -34,7 +34,7 @@ public class FactController {
 
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> patchEstado(
+    public ResponseEntity<HechoDTO> patchEstado(
             @PathVariable("id") String hechoId,
             @RequestBody Map<String,String> payload
     ) {
@@ -53,7 +53,7 @@ public class FactController {
                 collectionRepo.save(col);
 
 
-                return ResponseEntity.noContent().build();
+                return ResponseEntity.ok(fachadaFuente.buscarHechoXId(hechoId));
             }
         }
 
