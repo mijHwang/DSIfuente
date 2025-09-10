@@ -33,7 +33,6 @@ public class Fact
     private LocalDateTime fecha;
     private String origen;
     private LocalDateTime fechaModificacion;
-    private boolean censurada;
 
     @Enumerated(EnumType.STRING)
     private HechoEstado estado;
@@ -46,6 +45,7 @@ public class Fact
         INACTIVO,
         CENSURADO
     }
+
 
     // New Fact
     public Fact(String id, String nombreColeccion,String titulo, List<String> etiquetas, CategoriaHechoEnum categoria, String ubicacion, LocalDateTime fecha, String origen) {
@@ -60,15 +60,11 @@ public class Fact
         this.fecha = fecha;
         this.origen = origen;
         this.fechaModificacion = LocalDateTime.now();
-        this.censurada = false;
         this.estado = HechoEstado.ACTIVO;
 
     }
 
-    public void Censurar(){
-        this.fechaModificacion = LocalDateTime.now();
-        this.censurada = true;
-    }
+
 
     public void ModificarFact(String nombreColeccion,String descripcion, List<String> etiquetas, String ubicacion, LocalDateTime fecha) {
 
@@ -100,10 +96,23 @@ public class Fact
                         this.fechaModificacion = LocalDateTime.now();
                         break;
 
+                        case CENSURADO:
+                            this.estado = HechoEstado.CENSURADO;
+                            this.fechaModificacion = LocalDateTime.now();
+                            break;
+
                         default:
                             throw new IllegalArgumentException("Estado invalido");
         }
 
+    }
+
+    public Boolean isCensurado(){
+
+        if(this.estado == HechoEstado.CENSURADO){
+            return true;
+        }
+        return false;
     }
 
 

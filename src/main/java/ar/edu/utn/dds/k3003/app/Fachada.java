@@ -104,7 +104,8 @@ public class Fachada implements FachadaFuente{
       if(optionalFact.isPresent()){
 
         val factToSend = optionalFact.get();
-        return new HechoDTO(factToSend.getId(),factToSend.getNombreColeccion(), factToSend.getTitulo());
+        if (!factToSend.isCensurado()){
+        return new HechoDTO(factToSend.getId(),factToSend.getNombreColeccion(), factToSend.getTitulo());}
 
       }
     }
@@ -134,7 +135,7 @@ public class Fachada implements FachadaFuente{
 
       Fact factToSend = iterator.next();
 
-      if(!factToSend.isCensurada())
+      if(!factToSend.isCensurado())
         listToSend.add(new HechoDTO(factToSend.getId(), factToSend.getNombreColeccion(), factToSend.getTitulo()));
 
     }

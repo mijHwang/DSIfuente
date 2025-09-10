@@ -91,17 +91,6 @@ class FachadaTest {
     );
   }
 
-  // 8. listar hechos sin censura
-  @Test
-  void censurarFactCollectionHidesFact() {
-    Collection col = new Collection("C4","d");
-    Fact f1 = new Fact("1", "C4", "Title", List.of(), null, "loc", LocalDateTime.now(), "orig");
-    col.getFacts().add(f1);
-
-    col.censurarHecho("1");
-
-    assertTrue(f1.isCensurada(), "Fact should be marked censored");
-  }
 
   @Test
   void buscarHechoXColletionSuccess(){

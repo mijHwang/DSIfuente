@@ -63,15 +63,7 @@ public class Collection {
     return this.Facts.stream().filter(x -> x.getId().equals(hechoID)).findFirst();
   }
 
-  public void censurarHecho(String hechoID){
-    val optionalCensurar = getFactById(hechoID);
 
-    if(optionalCensurar.isPresent()){
-
-      val factToCensurar = optionalCensurar.get();
-      factToCensurar.Censurar();
-    }
-  }
 
 
 
