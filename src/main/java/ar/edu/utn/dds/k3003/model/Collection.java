@@ -40,7 +40,8 @@ public class Collection {
   public LocalDateTime ModificationTime;
 
   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-  @JoinColumn(name = "collection_name")  // This is the foreign key column in Fact table
+  /*@JoinColumn(name = "collection_name") */ // This is the foreign key column in Fact table
+  //going to erase the above to see what happens.
   public List<Fact> Facts = new ArrayList<>();
 
   public Collection( String Name, String Description) {
