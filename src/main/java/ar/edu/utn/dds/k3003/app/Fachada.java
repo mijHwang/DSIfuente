@@ -1,5 +1,6 @@
 package ar.edu.utn.dds.k3003.app;
 
+import ar.edu.utn.dds.k3003.clients.FuenteRetrofitClient;
 import ar.edu.utn.dds.k3003.facades.FachadaFuente;
 import ar.edu.utn.dds.k3003.facades.FachadaProcesadorPdI;
 import ar.edu.utn.dds.k3003.facades.dtos.ColeccionDTO;
@@ -23,16 +24,22 @@ import lombok.val;
 public class Fachada implements FachadaFuente{
 
   private CollectionRepo collectionRepo;
-  private FachadaProcesadorPdI procesadorPdI;
+
+  @Autowired
+  private FachadaProcesadorPdI FachadaProcesadorPdI;
+
+
   private AtomicLong hechoCounter = new AtomicLong(0);
   public Collection collection;
+    @Autowired
+    private FachadaProcesadorPdI fachadaProcesadorPdI;
+
+  //maybe change FuenteRetrofitClient to pdiClient or something.
 
 
 
-
-  public Fachada() {
+  public Fachada(FuenteRetrofitClient pdiClient) {
     this.collectionRepo = new InMemoryCollectionRepo();
-
   }
 
   @Autowired
@@ -146,22 +153,21 @@ public class Fachada implements FachadaFuente{
   @Override
   public void setProcesadorPdI(FachadaProcesadorPdI procesador) {
 
-    this.procesadorPdI = procesador;
+    this.FachadaProcesadorPdI = procesador;
   }
 
   @Override
   public PdIDTO agregar(PdIDTO pdIDTO) throws IllegalStateException {
 
-    if(procesadorPdI == null){
+    if(fachadaProcesadorPdI == null){
 
       throw new IllegalStateException("No procesador configurado");
     }
 
-    PdIDTO pdiAux = procesadorPdI.procesar(pdIDTO);
+    PdIDTO pdiAux = fachadaProcesadorPdI.procesar(pdIDTO);
 
     //PdIDTO(String id, String hechoId, String descripcion, String lugar, LocalDateTime momento, String contenido, List<String> etiquetas)
     String hechoABuscar = pdIDTO.hechoId();
-
 
     List<Collection> entireRepo = collectionRepo.findAll();
        /* if (entireRepo.isEmpty())
@@ -180,13 +186,14 @@ public class Fachada implements FachadaFuente{
           val factToModify = factOptional.get();
           List<Fact> facts = currentCollection.getFacts();
           int index = facts.indexOf(factToModify);
+
+
           factToModify.ModificarFact(factToModify.getNombreColeccion(),pdiAux.descripcion(),pdiAux.etiquetas(), pdiAux.lugar(), pdiAux.momento());
 
           //String id, String hechoId, String descripcion, String lugar, LocalDateTime momento, String contenido, List<String> etiquetas
           //need to save the new fact to the collection and save the new Collection to the repo.
 
           facts.set(index, factToModify);
-
 
           val optionlToMod = collectionRepo.findById(currentCollection.getName());
           if (!optionlToMod.isPresent()){
@@ -203,6 +210,51 @@ public class Fachada implements FachadaFuente{
 
     throw new NoSuchElementException(hechoABuscar + " no existe");
   }
+
+
+  /*@Override
+  @jakarta.transaction.Transactional
+  public ProcesamientoResponseDTO agregar(PdIDTO pdiDTO) throws IllegalStateException {
+    if (pdiDTO == null) throw new IllegalArgumentException("PdIDTO requerido");
+    if (pdiDTO.hechoId() == null || pdiDTO.hechoId().isBlank())
+      throw new IllegalArgumentException("hechoId requerido en PdIDTO");
+
+    Hecho hecho = this.hechoRepository.findById(pdiDTO.hechoId());
+    if (hecho == null)
+      throw new NoSuchElementException("Hecho no encontrado: " + pdiDTO.hechoId());
+
+    // 1) Procesar en ProcesadorPdI y recibir el resumen
+    final ProcesamientoResponseDTO proc;
+    try {
+      proc = fachadaprocesadorPdI.procesar(pdiDTO);
+    } catch (Exception e) {
+      throw new IllegalStateException("Ha resultado inválido el procesamiento de la PdI", e);
+    }
+    if (proc == null) throw new IllegalStateException("ProcesadorPdI devolvió nulo");
+
+    // 2) Si NO se procesó, no persistimos nada y devolvemos tal cual
+    if (!proc.procesada()) {
+      return proc;
+    }
+
+    // 3) Actualizar Hecho: unir etiquetas y agregar pdiId (sin duplicar) y persistir
+    if (hecho.getEtiquetas() == null) hecho.setEtiquetas(new java.util.ArrayList<>());
+    if (hecho.getPdiIds() == null) hecho.setPdiIds(new java.util.ArrayList<>());
+
+    java.util.LinkedHashSet<String> union = new java.util.LinkedHashSet<>(hecho.getEtiquetas());
+    if (proc.etiquetas() != null) union.addAll(proc.etiquetas());
+    hecho.setEtiquetas(new java.util.ArrayList<>(union));
+
+    String pdiId = proc.pdiId();
+    if (pdiId != null && !pdiId.isBlank() && !hecho.getPdiIds().contains(pdiId)) {
+      hecho.getPdiIds().add(pdiId);
+    }
+
+    this.hechoRepository.save(hecho);
+
+    // 4) Devolver el resultado al caller (controller)
+    return proc;
+  }*/
 
 
   public List<ColeccionDTO> colecciones(){

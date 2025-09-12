@@ -17,7 +17,16 @@ public interface FuenteRetrofitClient {
     Call<List<PdIDTO>> listHecho(@Query("hecho") String hecho);
 
     @POST("/api/PdIs")
-    Call<PdIDTO> createPdI(@Body PdIDTO PdIDTO);
+    Call<PdIDTO> procesar(@Body PdIDTO pdi);
+
+    /*public HechoDTO findHechoById(String id) {
+        return restClient.get()
+                .uri("/api/hecho/{id}", id)
+                .retrieve()
+                .body(HechoDTO.class);
+    }*/
+
+
 }
 
 

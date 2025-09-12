@@ -4,6 +4,8 @@ package ar.edu.utn.dds.k3003.app;
 import static org.junit.jupiter.api.Assertions.*;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import ar.edu.utn.dds.k3003.clients.FuenteRetrofitClient;
 import ar.edu.utn.dds.k3003.facades.FachadaProcesadorPdI;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,10 +21,11 @@ import java.lang.reflect.Method;
 
 class FachadaTest {
   private Fachada fachada;
+  private FuenteRetrofitClient pdiClient;
 
   @BeforeEach
   void setUp() {
-    fachada = new Fachada();
+    fachada = new Fachada(pdiClient);
   }
 
   // 1. crear y buscar colección

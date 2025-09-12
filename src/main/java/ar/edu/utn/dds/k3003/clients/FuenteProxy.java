@@ -3,8 +3,13 @@ package ar.edu.utn.dds.k3003.clients;
 import ar.edu.utn.dds.k3003.facades.FachadaProcesadorPdI;
 import ar.edu.utn.dds.k3003.facades.FachadaSolicitudes;
 import ar.edu.utn.dds.k3003.facades.dtos.PdIDTO;
+
+import java.io.IOException;
 import java.util.NoSuchElementException;
+
+import org.springframework.stereotype.Service;
 import retrofit2.Retrofit;
+import retrofit2.Response;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 import java.util.List;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,7 +22,7 @@ GET /pdis?hecho={hechoId}
 POST /pdis
 
 */
-
+@Service
 public class FuenteProxy implements FachadaProcesadorPdI {
 
     private final String endpoint;
@@ -37,11 +42,30 @@ public class FuenteProxy implements FachadaProcesadorPdI {
         this.service = retrofit.create(FuenteRetrofitClient.class);
     }
 
+
+    //this is the most basic way to do this. I think
     @Override
-    public PdIDTO procesar(PdIDTO var1) throws IllegalStateException{
-        return null;
+    public PdIDTO procesar(PdIDTO pdi) throws IllegalStateException{
+
+        if (pdi.hechoId() == null || pdi.hechoId().isBlank())
+            throw new IllegalArgumentException("hechoId requerido en PdIDTO");
+
+        Response<PdIDTO> resp = null;
+        try {
+            resp = service.procesar(pdi).execute();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        return resp.body();
     }
 
+
+
+
+
+    //importan las dos abajo por el momento?
     @Override
     public PdIDTO buscarPdIPorId(String var1) throws NoSuchElementException{
         return null;
