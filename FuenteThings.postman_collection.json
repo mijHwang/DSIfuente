@@ -1,0 +1,221 @@
+{
+	"info": {
+		"_postman_id": "5a8c34c7-b264-4340-9639-69144341d994",
+		"name": "FuenteThings",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "47403956",
+		"_collection_link": "https://mhwang-d60c59ee-5447910.postman.co/workspace/Min-Jun-Hwang's-Workspace~8b76575d-9872-44d9-866c-ba993a4fb055/collection/47403956-5a8c34c7-b264-4340-9639-69144341d994?action=share&source=collection_link&creator=47403956"
+	},
+	"item": [
+		{
+			"name": "listar colecciones existentes",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://dsifuente.onrender.com/api/colecciones",
+					"protocol": "https",
+					"host": [
+						"dsifuente",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"api",
+						"colecciones"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "buscar por coleccion por nombre",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://dsifuente.onrender.com/api/colecciones/coleccion1",
+					"protocol": "https",
+					"host": [
+						"dsifuente",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"api",
+						"colecciones",
+						"coleccion1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ver hechos una coleccion por nombre",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://dsifuente.onrender.com/api/colecciones/coleccion1/hechos",
+					"protocol": "https",
+					"host": [
+						"dsifuente",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"api",
+						"colecciones",
+						"coleccion1",
+						"hechos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Crear hecho nuevo, por nombre de col",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n        \"id\": \"1\",\r\n        \"nombre_coleccion\": \"coleccion12\",\r\n        \"titulo\": \"Hecho de prueba a agregar\",\r\n        \"etiquetas\": null,\r\n        \"categoria\": null,\r\n        \"ubicacion\": null,\r\n        \"fecha\": null,\r\n        \"origen\": null\r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://dsifuente.onrender.com/api/hecho",
+					"protocol": "https",
+					"host": [
+						"dsifuente",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"api",
+						"hecho"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "crear coleccion nueva",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nombre\": \"coleccion14\",\r\n  \"descripcion\": \"seguimos guardando cosas\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://dsifuente.onrender.com/api/colecciones",
+					"protocol": "https",
+					"host": [
+						"dsifuente",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"api",
+						"colecciones"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Buscar hecho por ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://dsifuente.onrender.com/api/hecho/6",
+					"protocol": "https",
+					"host": [
+						"dsifuente",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"api",
+						"hecho",
+						"6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "cambiarEstadoHecho",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"estado\" : \"CENSURADO\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://dsifuente.onrender.com/api/hecho/6",
+					"protocol": "https",
+					"host": [
+						"dsifuente",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"api",
+						"hecho",
+						"6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PDIagregarEtiqueta",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"hecho_id\": \"5\",\r\n  \"descripcion\": \"Descripción de PdI\",\r\n  \"lugar\": \"unLugar\",\r\n  \"momento\": \"2024-06-10T15:30:00\",\r\n  \"contenido\": null,\r\n  \"etiquetas\":[\"etiqueta113\", \"etiqueta23\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://dsifuente.onrender.com/api/hecho/PdIs",
+					"protocol": "https",
+					"host": [
+						"dsifuente",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"api",
+						"hecho",
+						"PdIs"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
