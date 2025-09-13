@@ -28,14 +28,16 @@ public class FactController {
         this.collectionRepo = collectionRepo;
     }
 
+    //buscar un hecho particular por ID
     @GetMapping("/{id}")
     public ResponseEntity<HechoDTO> buscarHechoPorId(@PathVariable("id") String hechoId) {
         return ResponseEntity.ok(fachadaFuente.buscarHechoXId(hechoId));
     }
 
 
+    //cambiar estado del hecho por ID
     @PatchMapping("/{id}")
-    public ResponseEntity<HechoDTO> patchEstado(
+    public ResponseEntity<String> patchEstado(
             @PathVariable("id") String hechoId,
             @RequestBody Map<String,String> payload
     ) {
@@ -54,7 +56,7 @@ public class FactController {
                 collectionRepo.save(col);
 
 
-                return ResponseEntity.ok(fachadaFuente.buscarHechoXId(hechoId));
+                return ResponseEntity.ok("El hecho con id n° " + hechoId + " está en estado " + fact.getEstado().name());
             }
         }
 
@@ -62,13 +64,14 @@ public class FactController {
         throw new NoSuchElementException("Hecho " + hechoId + " no encontrado");
     }
 
+    //creacion de un hecho nuevo.
     @PostMapping
     public ResponseEntity<HechoDTO> crearHecho(@RequestBody HechoDTO dto) {
         return ResponseEntity.ok(fachadaFuente.agregar(dto));
     }
 
 
-    @PatchMapping("/{id}/PdIs")
+    @PatchMapping("/PdIs")
     public ResponseEntity<PdIDTO> agregarPdiHecho(@RequestBody PdIDTO dto) {
         return ResponseEntity.ok(fachadaFuente.agregar(dto));
     }

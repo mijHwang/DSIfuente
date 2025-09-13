@@ -56,7 +56,7 @@ public class FuenteProxy implements FachadaProcesadorPdI {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        
+
         return resp.body();
     }
 

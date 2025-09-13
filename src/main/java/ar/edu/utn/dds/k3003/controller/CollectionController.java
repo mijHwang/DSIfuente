@@ -22,16 +22,19 @@ public class CollectionController {
         this.fachadaFuente = fachadaFuente;
     }
 
+    //listar colecciones existentes
     @GetMapping
     public ResponseEntity<List<ColeccionDTO>> listar() {
         return ResponseEntity.ok(fachadaFuente.colecciones());
     }
 
+    //buscar Coleccion por nombre
     @GetMapping("/{nombre}")
     public ResponseEntity<ColeccionDTO> buscarColeccionPorNombre(@PathVariable String nombre) {
         return ResponseEntity.ok(fachadaFuente.buscarColeccionXId(nombre));
     }
 
+    //crear una coleccion nueva
     @PostMapping
     public ResponseEntity<ColeccionDTO> crearColeccion(@RequestBody ColeccionDTO coleccion) {
         return ResponseEntity.ok(fachadaFuente.agregar(coleccion));
