@@ -205,12 +205,15 @@ public class Fachada implements FachadaFuente{
 
           facts.set(index, factToModify);
 
-          val optionlToMod = collectionRepo.findById(currentCollection.getName());
+          /*val optionlToMod = collectionRepo.findById(currentCollection.getName());
           if (!optionlToMod.isPresent()){
             throw new NoSuchElementException(currentCollection + "vacio");
           }
           val colToMod = optionlToMod.get();
           collectionRepo.save(colToMod);
+
+*/
+          collectionRepo.save(currentCollection);
 
           return pdiAux;
         }
@@ -220,7 +223,6 @@ public class Fachada implements FachadaFuente{
 
     throw new NoSuchElementException(hechoABuscar + " no existe");
   }
-
 
 
 
