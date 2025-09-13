@@ -188,12 +188,17 @@ public class Fachada implements FachadaFuente{
           int index = facts.indexOf(factToModify);
 
 
-          factToModify.getEtiquetas().addAll(pdiAux.etiquetas());
-          factToModify.ModificarFact(factToModify.getNombreColeccion(),
+          List<String> merged = new ArrayList<>();
+          if (factToModify.getEtiquetas() != null) merged.addAll(factToModify.getEtiquetas());
+          if (pdiAux.etiquetas() != null) merged.addAll(pdiAux.etiquetas());
+
+          factToModify.ModificarFact(
+                  factToModify.getNombreColeccion(),
                   factToModify.getDescripcion(),
-                  pdiAux.etiquetas(),
+                  merged,
                   pdiAux.lugar(),
-                  pdiAux.momento());
+                  pdiAux.momento()
+          );
 
           //String id, String hechoId, String descripcion, String lugar, LocalDateTime momento, String contenido, List<String> etiquetas
           //need to save the new fact to the collection and save the new Collection to the repo.
