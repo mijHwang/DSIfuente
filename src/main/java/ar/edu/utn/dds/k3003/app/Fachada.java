@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicLong;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.val;
 
 @Service
@@ -156,6 +157,7 @@ public class Fachada implements FachadaFuente{
     this.FachadaProcesadorPdI = procesador;
   }
 
+  @Transactional
   @Override
   public PdIDTO agregar(PdIDTO pdIDTO) throws IllegalStateException {
 
