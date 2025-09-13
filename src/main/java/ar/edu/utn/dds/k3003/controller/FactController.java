@@ -71,7 +71,7 @@ public class FactController {
     }
 
 
-    @PatchMapping("/PdIs")
+    @PostMapping("/PdIs")
     public ResponseEntity<PdIDTO> agregarPdiHecho(@RequestBody PdIDTO dto) {
         return ResponseEntity.ok(fachadaFuente.agregar(dto));
     }
