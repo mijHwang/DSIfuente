@@ -47,17 +47,35 @@ public class FuenteProxy implements FachadaProcesadorPdI {
     @Override
     public PdIDTO procesar(PdIDTO pdi) throws IllegalStateException{
 
-        if (pdi.hechoId() == null || pdi.hechoId().isBlank())
+        if (pdi == null) {
+            throw new IllegalArgumentException("pdi is null");
+        }
+        if (pdi.hechoId() == null || pdi.hechoId().isBlank()) {
             throw new IllegalArgumentException("hechoId requerido en PdIDTO");
+        }
 
-        Response<PdIDTO> resp = null;
+        Response<PdIDTO> resp;
         try {
             resp = service.procesar(pdi).execute();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+
+            throw new RuntimeException("Error calling procesar service", e);
         }
 
-        return resp.body();
+        if (resp == null) {
+            throw new IllegalStateException("No response from procesar service");
+        }
+        if (!resp.isSuccessful()) {
+            throw new IllegalStateException("procesar service failed: HTTP " + resp.code() + " - " + resp.message());
+        }
+
+        PdIDTO body = resp.body();
+        if (body == null) {
+            // remote returned 2xx empty body
+            throw new IllegalStateException("procesar service returned empty body");
+        }
+
+        return body;
     }
 
 
