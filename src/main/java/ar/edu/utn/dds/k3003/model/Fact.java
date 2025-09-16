@@ -1,12 +1,9 @@
 package ar.edu.utn.dds.k3003.model;
 
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 import ar.edu.utn.dds.k3003.facades.dtos.CategoriaHechoEnum;
-import jakarta.persistence.Entity;
 import lombok.*;
-import jakarta.persistence.Id;
 
 
 import java.time.LocalDateTime;
@@ -23,7 +20,9 @@ public class Fact
 
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String nombreColeccion;
     private String descripcion;
     private String titulo;
@@ -48,9 +47,25 @@ public class Fact
 
 
     // New Fact
-    public Fact(String id, String nombreColeccion,String titulo, List<String> etiquetas, CategoriaHechoEnum categoria, String ubicacion, LocalDateTime fecha, String origen) {
+    public Fact(Long id, String nombreColeccion,String titulo, List<String> etiquetas, CategoriaHechoEnum categoria, String ubicacion, LocalDateTime fecha, String origen) {
 
         this.id = id;
+        this.nombreColeccion = nombreColeccion;
+        this.titulo = titulo;
+        this.etiquetas = etiquetas;
+        this.categoria = categoria;
+        this.descripcion = null;
+        this.ubicacion = ubicacion;
+        this.fecha = fecha;
+        this.origen = origen;
+        this.fechaModificacion = LocalDateTime.now();
+        this.estado = HechoEstado.ACTIVO;
+
+    }
+
+    public Fact(String nombreColeccion,String titulo, List<String> etiquetas, CategoriaHechoEnum categoria, String ubicacion, LocalDateTime fecha, String origen) {
+
+
         this.nombreColeccion = nombreColeccion;
         this.titulo = titulo;
         this.etiquetas = etiquetas;

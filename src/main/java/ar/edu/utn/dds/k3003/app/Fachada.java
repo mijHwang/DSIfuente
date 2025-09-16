@@ -30,7 +30,7 @@ public class Fachada implements FachadaFuente{
   private FachadaProcesadorPdI FachadaProcesadorPdI;
 
 
-  private AtomicLong hechoCounter = new AtomicLong(0);
+
   public Collection collection;
     @Autowired
     private FachadaProcesadorPdI fachadaProcesadorPdI;
@@ -72,31 +72,37 @@ public class Fachada implements FachadaFuente{
   public HechoDTO agregar(HechoDTO hechoDTO) {
 
     val collectionOptional = collectionRepo.findById(hechoDTO.nombreColeccion());
-    long nuevoId = hechoCounter.incrementAndGet();
+
+    val hecho = new Fact(
+            hechoDTO.nombreColeccion(), hechoDTO.titulo(),
+            hechoDTO.etiquetas(), hechoDTO.categoria(), hechoDTO.ubicacion(),
+            hechoDTO.fecha(), hechoDTO.origen());
+
     if (collectionOptional.isPresent()){
-      val hecho = new Fact(String.valueOf(nuevoId),
-              hechoDTO.nombreColeccion(), hechoDTO.titulo(),
-              hechoDTO.etiquetas(), hechoDTO.categoria(), hechoDTO.ubicacion(),
-              hechoDTO.fecha(), hechoDTO.origen());
+
 
       val oldCollection = collectionOptional.get();
-      List<Fact> newFacts = new ArrayList<>(oldCollection.getFacts());
+      /*List<Fact> newFacts = new ArrayList<>(oldCollection.getFacts());
 
       newFacts.add(hecho);
-      Collection newCollection = new Collection(oldCollection.getName(), oldCollection.getDescription(),oldCollection.getCreationTime(), LocalDateTime.now(), newFacts);
+      Collection newCollection = new Collection(oldCollection.getName(), oldCollection.getDescription(),oldCollection.getCreationTime(), LocalDateTime.now(), newFacts);*/
+      oldCollection.getFacts().add(hecho);
 
 
-      this.collectionRepo.save(newCollection);
+      this.collectionRepo.save(oldCollection);
 
 
     }else{
       throw  new IllegalArgumentException(hechoDTO.nombreColeccion() + " no existe");
     }
 
-    return new HechoDTO(String.valueOf(nuevoId), hechoDTO.nombreColeccion(),
+    return new HechoDTO(hecho.getId().toString(), hechoDTO.nombreColeccion(),
             hechoDTO.titulo(),hechoDTO.etiquetas(),hechoDTO.categoria(),
             hechoDTO.ubicacion(),hechoDTO.fecha(), hechoDTO.origen() );
   }
+
+
+
 
   @Override
   public HechoDTO buscarHechoXId(String hechoId) throws NoSuchElementException {
@@ -113,7 +119,13 @@ public class Fachada implements FachadaFuente{
 
         val factToSend = optionalFact.get();
         if (!factToSend.isCensurado()){
-        return new HechoDTO(factToSend.getId(),factToSend.getNombreColeccion(), factToSend.getTitulo());}
+        return new HechoDTO(factToSend.getId().toString(),factToSend.getNombreColeccion(), factToSend.getTitulo());
+        }
+        else
+        {
+
+          throw new NoSuchElementException(hechoId + "Censurado");
+        }
 
       }
     }
@@ -143,9 +155,12 @@ public class Fachada implements FachadaFuente{
 
       Fact factToSend = iterator.next();
 
-      if(!factToSend.isCensurado())
-        listToSend.add(new HechoDTO(factToSend.getId(), factToSend.getNombreColeccion(), factToSend.getTitulo()));
-
+      if(!factToSend.isCensurado()) {
+        listToSend.add(new HechoDTO(factToSend.getId().toString(), factToSend.getNombreColeccion(), factToSend.getTitulo()));
+      }
+      else{
+        listToSend.add(new HechoDTO(factToSend.getId().toString(), factToSend.getNombreColeccion(),"Censurado" ));
+      }
     }
 
     return listToSend;
@@ -189,7 +204,6 @@ public class Fachada implements FachadaFuente{
           List<Fact> facts = currentCollection.getFacts();
           int index = facts.indexOf(factToModify);
 
-
           List<String> merged = new ArrayList<>();
           if (factToModify.getEtiquetas() != null) merged.addAll(factToModify.getEtiquetas());
           if (pdiAux.etiquetas() != null) merged.addAll(pdiAux.etiquetas());
@@ -205,7 +219,7 @@ public class Fachada implements FachadaFuente{
           //String id, String hechoId, String descripcion, String lugar, LocalDateTime momento, String contenido, List<String> etiquetas
           //need to save the new fact to the collection and save the new Collection to the repo.
 
-          facts.set(index, factToModify);
+          currentCollection.getFacts().set(index, factToModify);
 
           /*val optionlToMod = collectionRepo.findById(currentCollection.getName());
           if (!optionlToMod.isPresent()){
@@ -215,6 +229,7 @@ public class Fachada implements FachadaFuente{
           collectionRepo.save(colToMod);
 
 */
+
           collectionRepo.save(currentCollection);
 
           return pdiAux;
