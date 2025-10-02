@@ -40,7 +40,9 @@ public class Fachada implements FachadaFuente{
 
 
   public Fachada(FuenteRetrofitClient pdiClient) {
+
     this.collectionRepo = new InMemoryCollectionRepo();
+
   }
 
   @Autowired
@@ -50,12 +52,19 @@ public class Fachada implements FachadaFuente{
 
   @Override // this adds agregar
   public ColeccionDTO agregar(ColeccionDTO coleccionDTO) {
+
+
     if (this.collectionRepo.findById(coleccionDTO.nombre()).isPresent()){
+
       throw  new IllegalArgumentException(coleccionDTO.nombre() + " ya existe");
+
     }
+
     val collection = new Collection(coleccionDTO.nombre(), coleccionDTO.descripcion());
     this.collectionRepo.save(collection);
     return new ColeccionDTO(collection.getName(), collection.getDescription());
+
+
   }
 
   @Override
@@ -124,7 +133,7 @@ public class Fachada implements FachadaFuente{
         else
         {
 
-          throw new NoSuchElementException(hechoId + "Censurado");
+          throw new NoSuchElementException(hechoId + " Censurado");
         }
 
       }
