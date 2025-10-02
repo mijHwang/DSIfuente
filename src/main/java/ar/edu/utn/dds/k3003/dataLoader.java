@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Configuration
 public class dataLoader {
 
-    private Long id = 1L;
+
     @Bean
     CommandLineRunner preloadCollections(CollectionRepo collectionRepo) {
         return args -> {
@@ -22,7 +22,6 @@ public class dataLoader {
             Collection c = new Collection("coleccion1", "Mi primera colección");
             // Add a Fact to it:
             Fact f = new Fact(
-                    id,
                     "coleccion1",
                     "Hecho de prueba",
                     List.of("tag1", "tag2"),
