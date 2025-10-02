@@ -26,6 +26,7 @@ public class hechoWorker extends DefaultConsumer {
 
         this.getChannel().queueDeclare(queueName, false, false, false, null);
         this.getChannel().queueBind(queueName, queueName, "");
+        this.getChannel().basicConsume(queueName, false, this);
     }
 
     @Override
