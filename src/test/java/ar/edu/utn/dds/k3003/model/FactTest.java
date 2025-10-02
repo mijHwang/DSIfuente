@@ -10,8 +10,8 @@ import org.junit.jupiter.api.Test;
 public class FactTest {
     @Test
     void equalsHashCode_basedOnId() {
-        Fact f1 = new Fact("ID", "C", "Title", List.of(), null, "loc", LocalDateTime.now(), "orig");
-        Fact f2 = new Fact("ID", "C", "Other", List.of("x"), null, "loc2", LocalDateTime.now(), "orig2");
+        Fact f1 = new Fact( "C", "Title", List.of(), null, "loc", LocalDateTime.now(), "orig");
+        Fact f2 = new Fact("C", "Other", List.of("x"), null, "loc2", LocalDateTime.now(), "orig2");
         assertEquals(f1, f2);
         assertEquals(f1.hashCode(), f2.hashCode());
     }
