@@ -7,7 +7,11 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
+
+
 public class hechoWorker extends DefaultConsumer {
+
+
 
     private String queueName;
     private EntityManagerFactory entityManagerFactory;
@@ -37,12 +41,12 @@ public class hechoWorker extends DefaultConsumer {
 
         Map<String, String> env = System.getenv();
         ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost(env.get("jackal.rmq.cloudamqp.com"));
-        factory.setUsername(env.get("rxqcxovb"));
-        factory.setPassword(env.get("fzwDuHfOd0QPo2eKYyvma4JiwNb4qVGh"));
+        factory.setHost(env.get("QUEUE_HOST"));
+        factory.setUsername(env.get("QUEUE_USERNAME"));
+        factory.setPassword(env.get("QUEUE_PASSWORD"));
 
-        factory.setVirtualHost(env.get("rxqcxovb"));
-        String queueName = env.get("Fuente_QUEUE");
+        factory.setVirtualHost(env.get("QUEUE_HOST"));
+        String queueName = env.get("QUEUE_NAME");
         Connection connection = factory.newConnection();
         Channel channel = connection.createChannel();
 
