@@ -40,6 +40,8 @@ public class hechoWorker extends DefaultConsumer {
 
     public static void main(String[] args) throws Exception {
 
+        System.out.println("Worker started you mother fucker!");
+
         Map<String, String> env = System.getenv();
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost(env.get("QUEUE_HOST"));
@@ -53,6 +55,14 @@ public class hechoWorker extends DefaultConsumer {
 
         hechoWorker worker = new hechoWorker(channel,queueName);
         worker.init();
+
+        System.out.println("Worker initialized and waiting for messages...");
+
+        // Keep the program running
+        while (true) {
+            System.out.println("Worker still running...");
+            Thread.sleep(5000); // print every 5 seconds
+        }
     }
 
 }
