@@ -35,18 +35,25 @@ public class WorkerStarter {
                 factory.setUri(env.get("CLOUDAMQP_URL"));
             } else {
                 factory.setHost(env.get("QUEUE_HOST"));
+                log.info("Host set");
                 factory.setUsername(env.get("QUEUE_USERNAME"));
+                log.info("Username set");
                 factory.setPassword(env.get("QUEUE_PASSWORD"));
+                log.info("Password set");
                 factory.setVirtualHost(env.getOrDefault("QUEUE_USERNAME", "/"));
+                log.info("VHost set");
             }
 
             factory.setAutomaticRecoveryEnabled(true);
+            log.info("factory automatic recovery");
 
 
             this.connection = factory.newConnection();
             Channel channel = connection.createChannel();
+            log.info("channel created");
 
             hechoWorker worker = new hechoWorker(channel, env.get("QUEUE_NAME"), emf);
+            log.info("worker created");
             worker.init();
 
             log.info("Worker initialized and consuming messages!");

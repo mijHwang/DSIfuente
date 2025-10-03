@@ -10,6 +10,7 @@ import ar.edu.utn.dds.k3003.model.Collection;
 import ar.edu.utn.dds.k3003.model.Fact;
 import ar.edu.utn.dds.k3003.repository.CollectionRepo;
 import ar.edu.utn.dds.k3003.repository.InMemoryCollectionRepo;
+import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.transaction.annotation.Transactional;
+
 import lombok.val;
 
 @Service
@@ -50,6 +52,9 @@ public class Fachada implements FachadaFuente{
     this.collectionRepo = collectionRepo;
   }
 
+  @Autowired
+  private EntityManager em;
+
   @Override // this adds agregar
   public ColeccionDTO agregar(ColeccionDTO coleccionDTO) {
 
@@ -77,6 +82,8 @@ public class Fachada implements FachadaFuente{
     return new ColeccionDTO(coleccion.getName(),coleccion.getDescription());
   }
 
+
+  @Transactional
   @Override
   public HechoDTO agregar(HechoDTO hechoDTO) {
 
@@ -97,8 +104,8 @@ public class Fachada implements FachadaFuente{
       Collection newCollection = new Collection(oldCollection.getName(), oldCollection.getDescription(),oldCollection.getCreationTime(), LocalDateTime.now(), newFacts);*/
       oldCollection.getFacts().add(hecho);
 
-
       this.collectionRepo.save(oldCollection);
+      em.flush();
 
 
     }else{
