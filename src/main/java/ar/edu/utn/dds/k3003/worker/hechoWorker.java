@@ -15,8 +15,9 @@ public class hechoWorker extends DefaultConsumer {
 
 
 
-    private String queueName;
+    private String queueName = System.getenv().getOrDefault("QUEUE_NAME", "hechos");
     private EntityManagerFactory emf;
+
 
     private static final Logger log = Logger.getLogger(String.valueOf(hechoWorker.class));
 
@@ -30,8 +31,8 @@ public class hechoWorker extends DefaultConsumer {
 
         log.info("init");
 
-        this.getChannel().queueDeclare(queueName, false, false, false, null);
-        log.info("queue Declared");
+        /*this.getChannel().queueDeclare(queueName, false, false, false, null);
+        log.info("queue Declared");*/
 
         //this.getChannel().queueBind(queueName, queueName, "");
 
