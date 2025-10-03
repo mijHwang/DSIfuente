@@ -28,7 +28,7 @@ public class WorkerStarter {
             factory.setHost(env.get("QUEUE_HOST"));
             factory.setUsername(env.get("QUEUE_USERNAME"));
             factory.setPassword(env.get("QUEUE_PASSWORD"));
-            factory.setVirtualHost(env.getOrDefault("QUEUE_VHOST", "/"));
+            factory.setVirtualHost(env.getOrDefault("QUEUE_USERNAME", "/"));
         }
 
         this.connection = factory.newConnection();
