@@ -7,8 +7,7 @@ import com.rabbitmq.client.*;
 import jakarta.persistence.EntityManagerFactory;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-
-
+import java.util.logging.Logger;
 
 
 public class hechoWorker extends DefaultConsumer {
@@ -19,6 +18,8 @@ public class hechoWorker extends DefaultConsumer {
     private String queueName;
     private EntityManagerFactory emf;
 
+    private static final Logger log = Logger.getLogger(String.valueOf(hechoWorker.class));
+
     protected hechoWorker(Channel channel, String queueName, EntityManagerFactory emf) {
         super(channel);
         this.queueName = queueName;
@@ -27,9 +28,15 @@ public class hechoWorker extends DefaultConsumer {
 
     public void init() throws IOException {
 
+        log.info("init");
+
         this.getChannel().queueDeclare(queueName, false, false, false, null);
-        this.getChannel().queueBind(queueName, queueName, "");
+        log.info("queue Declared");
+
+        //this.getChannel().queueBind(queueName, queueName, "");
+
         this.getChannel().basicConsume(queueName, false, this);
+        log.info("basic consumer initialized");
     }
 
     @Override
