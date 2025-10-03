@@ -3,6 +3,7 @@ import ar.edu.utn.dds.k3003.app.Fachada;
 import ar.edu.utn.dds.k3003.facades.dtos.HechoDTO;
 import ar.edu.utn.dds.k3003.repository.JpaColeccionRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.rabbitmq.client.*;
 import jakarta.persistence.EntityManagerFactory;
 import java.io.IOException;
@@ -44,24 +45,41 @@ public class hechoWorker extends DefaultConsumer {
     public void handleDelivery(String consumerTag, Envelope envelope,
                                AMQP.BasicProperties properties, byte[] body) throws IOException {
 
-        ObjectMapper mapper = new ObjectMapper();
-
-
-        String json = new String(body, StandardCharsets.UTF_8);
-        HechoDTO dto = mapper.readValue(json, HechoDTO.class);
-        this.getChannel().basicAck(envelope.getDeliveryTag(), false);
-
         var em = emf.createEntityManager();
-        em.getTransaction().begin();
 
-        var repo = new JpaColeccionRepository(em);
+        try {
 
-        Fachada ff = new Fachada(repo);
-        ff.agregar(dto);
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
+
+            log.info("Attempting to process message");
+
+            String json = new String(body, StandardCharsets.UTF_8);
+            HechoDTO dto = mapper.readValue(json, HechoDTO.class);
 
 
-        em.getTransaction().commit();
-        em.close();
+            em.getTransaction().begin();
+
+            var repo = new JpaColeccionRepository(em);
+
+            Fachada ff = new Fachada(repo);
+            ff.agregar(dto);
+
+
+            em.getTransaction().commit();
+
+            log.info("message processed and done");
+            this.getChannel().basicAck(envelope.getDeliveryTag(), false);
+        } catch (Exception e) {
+
+            log.info("error during message processing");
+            if (em != null && em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            this.getChannel().basicNack(envelope.getDeliveryTag(), false, false);
+        } finally{
+            if (em != null) em.close();
+        }
 
 
     }
