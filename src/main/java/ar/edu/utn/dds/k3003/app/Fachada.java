@@ -52,6 +52,10 @@ public class Fachada implements FachadaFuente{
     this.collectionRepo = collectionRepo;
   }
 
+  public Fachada(FuenteRetrofitClient pdiClient) {
+    this.collectionRepo = new InMemoryCollectionRepo();
+  }
+
   @Autowired
   private EntityManager em;
 
