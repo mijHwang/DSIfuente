@@ -13,12 +13,10 @@ import ar.edu.utn.dds.k3003.repository.InMemoryCollectionRepo;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.val;

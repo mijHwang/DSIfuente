@@ -3,7 +3,6 @@ package ar.edu.utn.dds.k3003.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.val;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.AccessLevel;
@@ -17,7 +16,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.JoinColumn;
 
 
 
@@ -56,12 +54,12 @@ public class Collection {
 
   public Boolean itContains(String hechoID){
 
-    return this.Facts.stream().anyMatch(x -> x.getId().equals(hechoID));
+    return this.Facts.stream().anyMatch(x -> x.getId().toString().equals(hechoID));
   }
 
   public Optional<Fact> getFactById(String hechoID){
 
-    return this.Facts.stream().filter(x -> x.getId().equals(hechoID)).findFirst();
+    return this.Facts.stream().filter(x -> x.getId().toString().equals(hechoID)).findFirst();
   }
 
 

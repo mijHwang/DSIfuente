@@ -1,14 +1,13 @@
 package ar.edu.utn.dds.k3003.repository;
 
 import ar.edu.utn.dds.k3003.model.Collection;
-import ar.edu.utn.dds.k3003.model.Fact;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
 import org.springframework.context.annotation.Profile;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -39,7 +38,12 @@ public class JpaColeccionRepository implements CollectionRepo {
         CriteriaQuery<Collection> cq = cb.createQuery(Collection.class);
         Root<Collection> root = cq.from(Collection.class);
         cq.select(root).where(cb.equal(root.get("id"), id));
-        return Optional.ofNullable(this.em.createQuery(cq).getSingleResult());
+
+        try {
+            return Optional.of(this.em.createQuery(cq).getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
 
     }
 
