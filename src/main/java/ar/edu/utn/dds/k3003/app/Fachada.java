@@ -28,8 +28,8 @@ public class Fachada implements FachadaFuente{
 
   private CollectionRepo collectionRepo;
 
-  @Autowired
-  private FachadaProcesadorPdI FachadaProcesadorPdI;
+
+    //private FachadaProcesadorPdI FachadaProcesadorPdI;
 
 
 
@@ -41,11 +41,11 @@ public class Fachada implements FachadaFuente{
 
 
 
-  public Fachada(FuenteRetrofitClient pdiClient) {
+  /*public Fachada(FuenteRetrofitClient pdiClient) {
 
     this.collectionRepo = new InMemoryCollectionRepo();
 
-  }
+  }*/
 
   @Autowired
   public Fachada(CollectionRepo collectionRepo) {
@@ -185,7 +185,7 @@ public class Fachada implements FachadaFuente{
   @Override
   public void setProcesadorPdI(FachadaProcesadorPdI procesador) {
 
-    this.FachadaProcesadorPdI = procesador;
+    this.fachadaProcesadorPdI = procesador;
   }
 
   @Transactional

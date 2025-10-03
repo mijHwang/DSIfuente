@@ -1,36 +1,37 @@
 package ar.edu.utn.dds.k3003.worker;
 import ar.edu.utn.dds.k3003.app.Fachada;
+import ar.edu.utn.dds.k3003.facades.FachadaFuente;
 import ar.edu.utn.dds.k3003.facades.dtos.HechoDTO;
 import ar.edu.utn.dds.k3003.repository.JpaColeccionRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.rabbitmq.client.*;
 import jakarta.persistence.EntityManagerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.Logger;
-
 
 public class hechoWorker extends DefaultConsumer {
 
 
 
 
-    private String queueName = System.getenv().getOrDefault("QUEUE_NAME", "hechos");
-    private EntityManagerFactory emf;
+    private final String queueName;
+    private final FachadaFuente ff;
 
 
     private static final Logger log = Logger.getLogger(String.valueOf(hechoWorker.class));
 
-    protected hechoWorker(Channel channel, String queueName, EntityManagerFactory emf) {
+    protected hechoWorker(Channel channel, String queueName, FachadaFuente ff) {
         super(channel);
         this.queueName = queueName;
-        this.emf = emf;
+        this.ff = ff;
     }
 
     public void init() throws IOException {
-
-        log.info("init");
 
         /*this.getChannel().queueDeclare(queueName, false, false, false, null);
         log.info("queue Declared");*/
@@ -45,7 +46,7 @@ public class hechoWorker extends DefaultConsumer {
     public void handleDelivery(String consumerTag, Envelope envelope,
                                AMQP.BasicProperties properties, byte[] body) throws IOException {
 
-        var em = emf.createEntityManager();
+        //var em = emf.createEntityManager();
 
         try {
 
@@ -58,30 +59,18 @@ public class hechoWorker extends DefaultConsumer {
             HechoDTO dto = mapper.readValue(json, HechoDTO.class);
 
 
-            em.getTransaction().begin();
+            //em.getTransaction().begin();
 
-            var repo = new JpaColeccionRepository(em);
-
-            Fachada ff = new Fachada(repo);
             ff.agregar(dto);
 
-
-            em.getTransaction().commit();
+            //em.getTransaction().commit();
 
             log.info("message processed and done");
             this.getChannel().basicAck(envelope.getDeliveryTag(), false);
         } catch (Exception e) {
 
-            log.info("error processing message");
-            log.info(e.toString());
-            e.printStackTrace();
-
-            if (em != null && em.getTransaction().isActive()) {
-                em.getTransaction().rollback();
-            }
+            log.info("error processing message: " + e.toString());
             this.getChannel().basicNack(envelope.getDeliveryTag(), false, false);
-        } finally{
-            if (em != null) em.close();
         }
 
 

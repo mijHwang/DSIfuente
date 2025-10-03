@@ -1,9 +1,9 @@
 package ar.edu.utn.dds.k3003.worker;
 
+import ar.edu.utn.dds.k3003.facades.FachadaFuente;
 import com.rabbitmq.client.*;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
-import jakarta.persistence.EntityManagerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +18,9 @@ public class WorkerStarter {
     private Connection connection;
 
     @Autowired
-    private EntityManagerFactory emf;
+    private FachadaFuente ff;
+
+
 
     @PostConstruct
     public void startWorker() throws Exception {
@@ -47,13 +49,14 @@ public class WorkerStarter {
             factory.setAutomaticRecoveryEnabled(true);
             log.info("factory automatic recovery");
 
-
             this.connection = factory.newConnection();
             Channel channel = connection.createChannel();
             log.info("channel created");
 
-            hechoWorker worker = new hechoWorker(channel, env.get("QUEUE_NAME"), emf);
+            String queueName = System.getenv().getOrDefault("QUEUE_NAME", "hechos");
+
             log.info("worker created");
+            hechoWorker worker = new hechoWorker(channel, queueName, ff);
             worker.init();
 
             log.info("Worker initialized and consuming messages!");
