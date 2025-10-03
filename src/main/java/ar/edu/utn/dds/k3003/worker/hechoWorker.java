@@ -72,7 +72,10 @@ public class hechoWorker extends DefaultConsumer {
             this.getChannel().basicAck(envelope.getDeliveryTag(), false);
         } catch (Exception e) {
 
-            log.info("error during message processing");
+            log.info("error processing message");
+            log.info(e.toString());
+            e.printStackTrace();
+
             if (em != null && em.getTransaction().isActive()) {
                 em.getTransaction().rollback();
             }
