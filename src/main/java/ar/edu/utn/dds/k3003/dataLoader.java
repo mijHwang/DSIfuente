@@ -18,6 +18,13 @@ public class dataLoader {
     @Bean
     CommandLineRunner preloadCollections(CollectionRepo collectionRepo) {
         return args -> {
+
+            String name = "coleccion1";
+
+            if(collectionRepo.findById(name).isPresent()){
+                return;
+            }
+
             // Create a collection
             Collection c = new Collection("coleccion1", "Mi primera colección");
             // Add a Fact to it:
