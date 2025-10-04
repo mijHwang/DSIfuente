@@ -132,7 +132,7 @@ public class Fachada implements FachadaFuente{
     while(iterator.hasNext()){
 
       Collection collection = iterator.next();
-      val optionalFact = collection.Facts.stream().filter(x -> x.getId().equals(hechoId)).findFirst();
+      val optionalFact = collection.Facts.stream().filter(x -> x.getId().toString().equals(hechoId)).findFirst();
       if(optionalFact.isPresent()){
 
         val factToSend = optionalFact.get();
