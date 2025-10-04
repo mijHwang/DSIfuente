@@ -12,6 +12,7 @@ import ar.edu.utn.dds.k3003.repository.CollectionRepo;
 import ar.edu.utn.dds.k3003.repository.InMemoryCollectionRepo;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -142,7 +143,8 @@ public class Fachada implements FachadaFuente{
         else
         {
 
-          throw new NoSuchElementException(hechoId + " Censurado");
+
+          return new HechoDTO(factToSend.getId().toString(),factToSend.getNombreColeccion(), "Censurado");
         }
 
       }
