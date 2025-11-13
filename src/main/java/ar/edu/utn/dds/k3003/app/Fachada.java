@@ -1,11 +1,11 @@
 package ar.edu.utn.dds.k3003.app;
 
 import ar.edu.utn.dds.k3003.clients.FuenteRetrofitClient;
-import ar.edu.utn.dds.k3003.facades.FachadaFuente;
+import ar.edu.utn.dds.k3003.app.FachadaFuente;
 import ar.edu.utn.dds.k3003.facades.FachadaProcesadorPdI;
 import ar.edu.utn.dds.k3003.facades.dtos.ColeccionDTO;
 import ar.edu.utn.dds.k3003.facades.dtos.HechoDTO;
-import ar.edu.utn.dds.k3003.facades.dtos.PdIDTO;
+import ar.edu.utn.dds.k3003.DTO.PdIDTO;
 import ar.edu.utn.dds.k3003.model.Collection;
 import ar.edu.utn.dds.k3003.model.Fact;
 import ar.edu.utn.dds.k3003.repository.CollectionRepo;
@@ -33,8 +33,8 @@ public class Fachada implements FachadaFuente{
 
 
   public Collection collection;
-    @Autowired
-    private FachadaProcesadorPdI fachadaProcesadorPdI;
+  @Autowired
+  private FachadaProcesadorPdi fachadaProcesadorPdI;
 
   //maybe change FuenteRetrofitClient to pdiClient or something.
 
@@ -187,7 +187,7 @@ public class Fachada implements FachadaFuente{
   }
 
   @Override
-  public void setProcesadorPdI(FachadaProcesadorPdI procesador) {
+  public void setProcesadorPdI(FachadaProcesadorPdi procesador) {
 
     this.fachadaProcesadorPdI = procesador;
   }

@@ -1,6 +1,6 @@
 package ar.edu.utn.dds.k3003.worker;
 
-import ar.edu.utn.dds.k3003.facades.FachadaFuente;
+import ar.edu.utn.dds.k3003.app.FachadaFuente;
 import com.rabbitmq.client.*;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
@@ -32,7 +32,7 @@ public class WorkerStarter {
             Map<String, String> env = System.getenv();
             ConnectionFactory factory = new ConnectionFactory();
 
-            // Safer: use CLOUDAMQP_URL if provided
+            // Safer: use CLOUDAMQP_URL if provided??? i don't think I will ever get one at this point.
             if (env.containsKey("CLOUDAMQP_URL")) {
                 factory.setUri(env.get("CLOUDAMQP_URL"));
             } else {
