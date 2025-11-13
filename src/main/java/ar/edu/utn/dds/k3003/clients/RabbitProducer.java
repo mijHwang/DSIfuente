@@ -6,7 +6,7 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import org.springframework.stereotype.Component;
-import io.github.cdimascio.dotenv.Dotenv;
+
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -17,7 +17,6 @@ public class RabbitProducer {
     private static final Logger log = Logger.getLogger(RabbitProducer.class.getName());
     private final ObjectMapper objectMapper;
     private final Connection connection;
-    Dotenv dotenv = Dotenv.load();
 
     public RabbitProducer(ObjectMapper objectMapper) throws Exception {
         this.objectMapper = objectMapper;
@@ -27,14 +26,15 @@ public class RabbitProducer {
     private Connection createConnection() throws Exception {
 
         ConnectionFactory factory = new ConnectionFactory();
+        Map<String, String> env = System.getenv();
 
-        if (dotenv.get("CLOUDAMQP_URL") != null) {
-            factory.setUri(dotenv.get("CLOUDAMQP_URL"));
+        if (env.containsKey("CLOUDAMQP_URL")) {
+            factory.setUri(env.get("CLOUDAMQP_URL"));
         } else {
-            factory.setHost(dotenv.get("QUEUE_HOST"));
-            factory.setUsername(dotenv.get("QUEUE_USERNAME"));
-            factory.setPassword(dotenv.get("QUEUE_PASSWORD"));
-            factory.setVirtualHost(dotenv.get("QUEUE_USERNAME", "/"));
+            factory.setHost(env.get("QUEUE_HOST"));
+            factory.setUsername(env.get("QUEUE_USERNAME"));
+            factory.setPassword(env.get("QUEUE_PASSWORD"));
+            factory.setVirtualHost(System.getenv().getOrDefault("QUEUE_USERNAME", "/"));
         }
 
         factory.setAutomaticRecoveryEnabled(true);
