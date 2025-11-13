@@ -6,8 +6,7 @@ import ar.edu.utn.dds.k3003.facades.FachadaSolicitudes;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import java.util.List;
-import java.util.NoSuchElementException;
+
 
 public interface FachadaProcesadorPdi {
     PdIDTO procesar(PdIDTO var1) throws IllegalStateException;

@@ -1,6 +1,6 @@
 package ar.edu.utn.dds.k3003.clients;
 
-
+import io.github.cdimascio.dotenv.Dotenv;
 import ar.edu.utn.dds.k3003.app.FachadaProcesadorPdi;
 import ar.edu.utn.dds.k3003.DTO.PdIDTO;
 import ar.edu.utn.dds.k3003.facades.FachadaSolicitudes;
@@ -18,10 +18,13 @@ public class FuenteProxy implements FachadaProcesadorPdi {
     private static final Logger log = Logger.getLogger(FuenteProxy.class.getName());
     private final RabbitProducer producer;
     private final String queueName;
+    Dotenv dotenv = Dotenv.load();
 
     public FuenteProxy(RabbitProducer producer, ObjectMapper objectMapper) {
         this.producer = producer;
-        this.queueName = System.getenv().getOrDefault("QUEUE_NAME", "hechos");
+        this.queueName = dotenv.get("QUEUE_NAME") != null
+                ? dotenv.get("QUEUE_NAME")
+                : "hechos";
     }
 
     @Override

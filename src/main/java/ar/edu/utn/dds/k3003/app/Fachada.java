@@ -1,8 +1,7 @@
 package ar.edu.utn.dds.k3003.app;
 
 import ar.edu.utn.dds.k3003.clients.FuenteRetrofitClient;
-import ar.edu.utn.dds.k3003.app.FachadaFuente;
-import ar.edu.utn.dds.k3003.facades.FachadaProcesadorPdI;
+
 import ar.edu.utn.dds.k3003.facades.dtos.ColeccionDTO;
 import ar.edu.utn.dds.k3003.facades.dtos.HechoDTO;
 import ar.edu.utn.dds.k3003.DTO.PdIDTO;
@@ -12,7 +11,7 @@ import ar.edu.utn.dds.k3003.repository.CollectionRepo;
 import ar.edu.utn.dds.k3003.repository.InMemoryCollectionRepo;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -26,37 +25,25 @@ import lombok.val;
 public class Fachada implements FachadaFuente{
 
   private CollectionRepo collectionRepo;
-
-
-    //private FachadaProcesadorPdI FachadaProcesadorPdI;
-
-
-
   public Collection collection;
-  @Autowired
   private FachadaProcesadorPdi fachadaProcesadorPdI;
-
-  //maybe change FuenteRetrofitClient to pdiClient or something.
-
-
-
-  /*public Fachada(FuenteRetrofitClient pdiClient) {
-
-    this.collectionRepo = new InMemoryCollectionRepo();
-
-  }*/
-
-  @Autowired
-  public Fachada(CollectionRepo collectionRepo) {
-    this.collectionRepo = collectionRepo;
-  }
+  private EntityManager em;
 
   public Fachada(FuenteRetrofitClient pdiClient) {
     this.collectionRepo = new InMemoryCollectionRepo();
   }
 
+
+
+
   @Autowired
-  private EntityManager em;
+  public Fachada(CollectionRepo collectionRepo,
+                 FachadaProcesadorPdi fachadaProcesadorPdI,
+                 EntityManager em) {
+    this.collectionRepo = collectionRepo;
+    this.fachadaProcesadorPdI = fachadaProcesadorPdI;
+    this.em = em;
+  }
 
   @Override // this adds agregar
   public ColeccionDTO agregar(ColeccionDTO coleccionDTO) {

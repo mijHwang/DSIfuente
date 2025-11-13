@@ -1,8 +1,8 @@
 package ar.edu.utn.dds.k3003.controller;
 
-import ar.edu.utn.dds.k3003.facades.FachadaFuente;
+import ar.edu.utn.dds.k3003.app.FachadaFuente;
 import ar.edu.utn.dds.k3003.facades.dtos.HechoDTO;
-import ar.edu.utn.dds.k3003.facades.dtos.PdIDTO;
+import ar.edu.utn.dds.k3003.DTO.PdIDTO;
 import ar.edu.utn.dds.k3003.repository.CollectionRepo;
 import ar.edu.utn.dds.k3003.model.Collection;
 import ar.edu.utn.dds.k3003.model.Fact;

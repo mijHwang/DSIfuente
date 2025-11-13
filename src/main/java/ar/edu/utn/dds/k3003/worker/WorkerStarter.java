@@ -1,5 +1,5 @@
 package ar.edu.utn.dds.k3003.worker;
-
+import io.github.cdimascio.dotenv.Dotenv;
 import ar.edu.utn.dds.k3003.app.FachadaFuente;
 import com.rabbitmq.client.*;
 import jakarta.annotation.PostConstruct;
@@ -16,6 +16,7 @@ public class WorkerStarter {
     private static final Logger log = Logger.getLogger(String.valueOf(WorkerStarter.class));
 
     private Connection connection;
+    Dotenv dotenv = Dotenv.load();
 
     @Autowired
     private FachadaFuente ff;
@@ -29,20 +30,19 @@ public class WorkerStarter {
         try {
 
 
-            Map<String, String> env = System.getenv();
             ConnectionFactory factory = new ConnectionFactory();
 
             // Safer: use CLOUDAMQP_URL if provided??? i don't think I will ever get one at this point.
-            if (env.containsKey("CLOUDAMQP_URL")) {
-                factory.setUri(env.get("CLOUDAMQP_URL"));
+            if (dotenv.get("CLOUDAMQP_URL")!=null) {
+                factory.setUri(dotenv.get("CLOUDAMQP_URL"));
             } else {
-                factory.setHost(env.get("QUEUE_HOST"));
+                factory.setHost(dotenv.get("QUEUE_HOST"));
                 log.info("Host set");
-                factory.setUsername(env.get("QUEUE_USERNAME"));
+                factory.setUsername(dotenv.get("QUEUE_USERNAME"));
                 log.info("Username set");
-                factory.setPassword(env.get("QUEUE_PASSWORD"));
+                factory.setPassword(dotenv.get("QUEUE_PASSWORD"));
                 log.info("Password set");
-                factory.setVirtualHost(env.getOrDefault("QUEUE_USERNAME", "/"));
+                factory.setVirtualHost(dotenv.get("QUEUE_USERNAME", "/"));
                 log.info("VHost set");
             }
 
@@ -53,7 +53,7 @@ public class WorkerStarter {
             Channel channel = connection.createChannel();
             log.info("channel created");
 
-            String queueName = System.getenv().getOrDefault("QUEUE_NAME", "hechos");
+            String queueName = dotenv.get("QUEUE_NAME", "hechos");
 
             log.info("worker created");
             hechoWorker worker = new hechoWorker(channel, queueName, ff);
