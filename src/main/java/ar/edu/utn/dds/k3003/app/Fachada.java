@@ -99,7 +99,7 @@ public class Fachada implements FachadaFuente{
 
 
     }else{
-      throw  new IllegalArgumentException(hechoDTO.nombreColeccion() + " no existe");
+      throw new IllegalArgumentException("La colección " + hechoDTO.nombreColeccion() + " no existe");
     }
 
     return new HechoDTO(hecho.getId().toString(), hechoDTO.nombreColeccion(),
@@ -129,15 +129,12 @@ public class Fachada implements FachadaFuente{
         }
         else
         {
-
-
           return new HechoDTO(factToSend.getId().toString(),factToSend.getNombreColeccion(), "Censurado");
         }
 
       }
     }
-
-    throw  new NoSuchElementException(hechoId + " no existe");
+    throw new NoSuchElementException("El hecho id " + hechoId + " no existe");
   }
 
   @Override
@@ -182,77 +179,43 @@ public class Fachada implements FachadaFuente{
   @Transactional
   @Override
   public PdIDTO agregar(PdIDTO pdIDTO) throws IllegalStateException {
-
-    if(fachadaProcesadorPdI == null){
-
+    if (fachadaProcesadorPdI == null) {
       throw new IllegalStateException("No procesador configurado");
     }
 
     PdIDTO pdiAux = fachadaProcesadorPdI.procesar(pdIDTO);
-
-    //PdIDTO(String id, String hechoId, String descripcion, String lugar, LocalDateTime momento, String contenido, List<String> etiquetas)
     String hechoABuscar = pdIDTO.hechoId();
 
-    List<Collection> entireRepo = collectionRepo.findAll();
-       /* if (entireRepo.isEmpty())
-            throw new IllegalStateException("No hay colecciones cargadas");*/
-
-    Iterator<Collection> iterator = entireRepo.iterator();
-
-    while(iterator.hasNext()){
-
-      Collection currentCollection = iterator.next();
-      if(currentCollection.itContains(hechoABuscar)){
-
-        val factOptional  = currentCollection.getFactById(hechoABuscar);
+    for (Collection currentCollection : collectionRepo.findAll()) {
+      if (currentCollection.itContains(hechoABuscar)) {
+        val factOptional = currentCollection.getFactById(hechoABuscar);
 
         if (factOptional.isPresent()) {
           val factToModify = factOptional.get();
-          List<Fact> facts = currentCollection.getFacts();
-          int index = facts.indexOf(factToModify);
-
-          List<String> merged = new ArrayList<>();
-          if (factToModify.getEtiquetas() != null) merged.addAll(factToModify.getEtiquetas());
-          if (pdiAux.etiquetas() != null) merged.addAll(pdiAux.etiquetas());
+          List<String> mergedEtiquetas = new ArrayList<>(factToModify.getEtiquetas() != null ? factToModify.getEtiquetas() : List.of());
+          if (pdiAux.etiquetas() != null) {
+            mergedEtiquetas.addAll(pdiAux.etiquetas());
+          }
 
           factToModify.ModificarFact(
                   factToModify.getNombreColeccion(),
                   factToModify.getDescripcion(),
-                  merged,
+                  mergedEtiquetas,
                   pdiAux.lugar(),
                   pdiAux.momento()
           );
 
-          //String id, String hechoId, String descripcion, String lugar, LocalDateTime momento, String contenido, List<String> etiquetas
-          //need to save the new fact to the collection and save the new Collection to the repo.
-
-          currentCollection.getFacts().set(index, factToModify);
-
-          /*val optionlToMod = collectionRepo.findById(currentCollection.getName());
-          if (!optionlToMod.isPresent()){
-            throw new NoSuchElementException(currentCollection + "vacio");
-          }
-          val colToMod = optionlToMod.get();
-          collectionRepo.save(colToMod);
-
-*/
-
+          currentCollection.getFacts().set(currentCollection.getFacts().indexOf(factToModify), factToModify);
           collectionRepo.save(currentCollection);
-
           return pdiAux;
         }
-
       }
     }
 
-    throw new NoSuchElementException(hechoABuscar + " no existe");
+    throw new NoSuchElementException("El hecho id " + hechoABuscar + " no existe");
   }
 
-
-
-
   public List<ColeccionDTO> colecciones(){
-
 
     return this.collectionRepo.findAll().stream()
             .map(coleccion -> new ColeccionDTO(coleccion.getName(), coleccion.getDescription()))
