@@ -2,7 +2,7 @@ package ar.edu.utn.dds.k3003.controller;
 
 import ar.edu.utn.dds.k3003.app.FachadaFuente;
 import ar.edu.utn.dds.k3003.facades.dtos.HechoDTO;
-import ar.edu.utn.dds.k3003.DTO.PdIDTO;
+import ar.edu.utn.dds.k3003.dto.PdIDTO;
 import ar.edu.utn.dds.k3003.repository.CollectionRepo;
 import ar.edu.utn.dds.k3003.model.Collection;
 import ar.edu.utn.dds.k3003.model.Fact;
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 import java.util.NoSuchElementException;
-
 
 @RestController
 @RequestMapping("/api/hecho")
@@ -33,7 +32,6 @@ public class FactController {
     public ResponseEntity<HechoDTO> buscarHechoPorId(@PathVariable("id") String hechoId) {
         return ResponseEntity.ok(fachadaFuente.buscarHechoXId(hechoId));
     }
-
 
     //cambiar estado del hecho por ID
     @PatchMapping("/{id}")
@@ -69,7 +67,6 @@ public class FactController {
     public ResponseEntity<HechoDTO> crearHecho(@RequestBody HechoDTO dto) {
         return ResponseEntity.ok(fachadaFuente.agregar(dto));
     }
-
 
     @PostMapping("/PdIs")
     public ResponseEntity<PdIDTO> agregarPdiHecho(@RequestBody PdIDTO dto) {

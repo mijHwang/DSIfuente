@@ -1,20 +1,21 @@
 package ar.edu.utn.dds.k3003.clients;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.logging.Logger;
 
+@Slf4j
 @Component
 public class RabbitProducer {
 
-    private static final Logger log = Logger.getLogger(RabbitProducer.class.getName());
     private final ObjectMapper objectMapper;
     private final Connection connection;
 
@@ -49,9 +50,9 @@ public class RabbitProducer {
             String message = objectMapper.writeValueAsString(payload);
 
             channel.basicPublish("", queueName, null, message.getBytes(StandardCharsets.UTF_8));
-            log.info("Sent message to queue '" + queueName + "': " + message);
+            log.info("Sent message to queue '{}': {}", queueName, message);
         } catch (Exception e) {
-            log.severe("Error sending message to queue: " + e.getMessage());
+            log.error("Error sending message to queue: {}", e.getMessage());
             throw new RuntimeException(e);
         }
     }

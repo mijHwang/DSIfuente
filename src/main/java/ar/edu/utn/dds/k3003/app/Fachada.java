@@ -1,10 +1,11 @@
 package ar.edu.utn.dds.k3003.app;
 
+import ar.edu.utn.dds.k3003.clients.BusquedaNotificationClient;
 import ar.edu.utn.dds.k3003.clients.FuenteRetrofitClient;
 
 import ar.edu.utn.dds.k3003.facades.dtos.ColeccionDTO;
 import ar.edu.utn.dds.k3003.facades.dtos.HechoDTO;
-import ar.edu.utn.dds.k3003.DTO.PdIDTO;
+import ar.edu.utn.dds.k3003.dto.PdIDTO;
 import ar.edu.utn.dds.k3003.model.Collection;
 import ar.edu.utn.dds.k3003.model.Fact;
 import ar.edu.utn.dds.k3003.repository.CollectionRepo;
@@ -25,24 +26,23 @@ import lombok.val;
 public class Fachada implements FachadaFuente{
 
   private CollectionRepo collectionRepo;
-  public Collection collection;
   private FachadaProcesadorPdi fachadaProcesadorPdI;
   private EntityManager em;
+  private BusquedaNotificationClient busquedaClient;
 
   public Fachada(FuenteRetrofitClient pdiClient) {
     this.collectionRepo = new InMemoryCollectionRepo();
   }
 
-
-
-
   @Autowired
   public Fachada(CollectionRepo collectionRepo,
                  FachadaProcesadorPdi fachadaProcesadorPdI,
-                 EntityManager em) {
+                 EntityManager em,
+                 BusquedaNotificationClient busquedaClient) {
     this.collectionRepo = collectionRepo;
     this.fachadaProcesadorPdI = fachadaProcesadorPdI;
     this.em = em;
+    this.busquedaClient = busquedaClient;
   }
 
   @Override // this adds agregar
@@ -86,25 +86,30 @@ public class Fachada implements FachadaFuente{
 
     if (collectionOptional.isPresent()){
 
-
       val oldCollection = collectionOptional.get();
-      /*List<Fact> newFacts = new ArrayList<>(oldCollection.getFacts());
-
-      newFacts.add(hecho);
-      Collection newCollection = new Collection(oldCollection.getName(), oldCollection.getDescription(),oldCollection.getCreationTime(), LocalDateTime.now(), newFacts);*/
       oldCollection.getFacts().add(hecho);
-
       this.collectionRepo.save(oldCollection);
       em.flush();
-
 
     }else{
       throw new IllegalArgumentException("La colección " + hechoDTO.nombreColeccion() + " no existe");
     }
+    busquedaClient.notificarHechoCreado(toDTO(hecho));
 
-    return new HechoDTO(hecho.getId().toString(), hechoDTO.nombreColeccion(),
-            hechoDTO.titulo(),hechoDTO.etiquetas(),hechoDTO.categoria(),
-            hechoDTO.ubicacion(),hechoDTO.fecha(), hechoDTO.origen() );
+    return toDTO(hecho);
+  }
+
+  private HechoDTO toDTO(Fact hecho){
+    return new HechoDTO(
+            hecho.getId().toString(),
+            hecho.getNombreColeccion(),
+            hecho.getTitulo(),
+            hecho.getEtiquetas(),
+            hecho.getCategoria(),
+            hecho.getUbicacion(),
+            hecho.getFecha(),
+            hecho.getOrigen()
+    );
   }
 
 

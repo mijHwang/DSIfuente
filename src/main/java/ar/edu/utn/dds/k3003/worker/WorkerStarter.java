@@ -4,24 +4,21 @@ import ar.edu.utn.dds.k3003.app.FachadaFuente;
 import com.rabbitmq.client.*;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
 import java.util.logging.Logger;
 
+@Slf4j
 @Component
+@RequiredArgsConstructor
 public class WorkerStarter {
 
-    private static final Logger log = Logger.getLogger(String.valueOf(WorkerStarter.class));
-
+    private final FachadaFuente ff;
     private Connection connection;
-
-
-    @Autowired
-    private FachadaFuente ff;
-
-
 
     @PostConstruct
     public void startWorker() throws Exception {

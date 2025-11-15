@@ -1,4 +1,4 @@
-package ar.edu.utn.dds.k3003.DTO;
+package ar.edu.utn.dds.k3003.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -25,15 +25,4 @@ public record PdIDTO(
         LocalDateTime fechaProcesamiento
 ) {
 
-    //no imagen
-    public PdIDTO(String id, String hechoId, String descripcion, String lugar,
-                  LocalDateTime momento, String contenido, List<String> etiquetas) {
-        this(id, hechoId, descripcion, lugar, momento, contenido, null, null, null, etiquetas, null, null);
-    }
-
-    // fuck images and fuck you too.
-    public PdIDTO(String id, String hechoId, String descripcion, String lugar,
-                  LocalDateTime momento, String contenido, String imagenUrl) {
-        this(id, hechoId, descripcion, lugar, momento, contenido, imagenUrl, null, null, null, null, null);
-    }
 }

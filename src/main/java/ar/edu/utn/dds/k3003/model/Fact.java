@@ -1,5 +1,6 @@
 package ar.edu.utn.dds.k3003.model;
 
+import ar.edu.utn.dds.k3003.facades.dtos.HechoDTO;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 import ar.edu.utn.dds.k3003.facades.dtos.CategoriaHechoEnum;
@@ -17,7 +18,6 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Fact
 {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -129,6 +129,5 @@ public class Fact
         }
         return false;
     }
-
 
 }
