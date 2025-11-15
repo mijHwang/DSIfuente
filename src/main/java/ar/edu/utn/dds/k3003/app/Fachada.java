@@ -11,6 +11,7 @@ import ar.edu.utn.dds.k3003.model.Fact;
 import ar.edu.utn.dds.k3003.repository.CollectionRepo;
 import ar.edu.utn.dds.k3003.repository.InMemoryCollectionRepo;
 import jakarta.persistence.EntityManager;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.val;
 
+@Slf4j
 @Service
 public class Fachada implements FachadaFuente{
 
@@ -94,7 +96,9 @@ public class Fachada implements FachadaFuente{
     }else{
       throw new IllegalArgumentException("La colección " + hechoDTO.nombreColeccion() + " no existe");
     }
+    log.info("🔔 Intentando notificar hecho: {}", hecho.getId());
     busquedaClient.notificarHechoCreado(toDTO(hecho));
+    log.info("✅ Notificación enviada para hecho: {}", hecho.getId());
 
     return toDTO(hecho);
   }

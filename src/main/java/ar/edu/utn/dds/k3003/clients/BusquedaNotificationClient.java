@@ -2,6 +2,7 @@ package ar.edu.utn.dds.k3003.clients;
 
 import ar.edu.utn.dds.k3003.facades.dtos.HechoDTO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
@@ -34,6 +35,7 @@ public class BusquedaNotificationClient {
         try {
             restClient.post()
                     .uri("/api/indexacion/hecho")
+                    .contentType(MediaType.APPLICATION_JSON)
                     .body(hecho)
                     .retrieve()
                     .toBodilessEntity();
